@@ -23,8 +23,8 @@ Le bridge écoute uniquement sur `127.0.0.1:8765` et ne commande pas le tempo de
 ### État et limites
 
 - Compilation et test automatique Windows réalisés via GitHub Actions.
-- Fonctionnement BPM + Play/Stop validé manuellement avec Ableton Live sur **Windows 10 64 bits**.
-- **Windows 11 n'est pas encore vérifié** ; retours bienvenus.
+- Fonctionnement BPM + Play/Stop validé manuellement avec Ableton Live sur **Windows 10 et Windows 11 64 bits**.
+- **Windows 11 testé avec succès sur un portable** ; d'autres configurations restent à confirmer, retours bienvenus.
 - Le binaire est **non signé numériquement** : Windows SmartScreen peut avertir. Ne désactive pas les protections de Windows globalement.
 - Le dossier livré contient plusieurs fichiers : **ne déplace pas l'EXE seul**, conserve les sous-dossiers avec lui.
 
