@@ -4,9 +4,9 @@ Pont local entre **Ableton Link** et [Pilami Strudel Lab](https://pilami.fr/stru
 
 Le bridge lit le **BPM**, la position en temps et mesures, les participants Link et les états **Play/Stop**, puis les transmet à l'application web par WebSocket local. Il ne modifie pas le tempo ni le transport de Live.
 
-> **Bêta Windows** : l'exécutable portable a été testé sur Windows 10 x64 avec Ableton Live. La compatibilité Windows 11 reste à confirmer. Linux et macOS restent à développer. Voir [GitHub Releases](https://github.com/LostForgotten/pilami-link-bridge/releases) pour le téléchargement.
+> **Bêta Windows** : l'exécutable portable a été testé sur Windows 10 x64 et Windows 11 x64 avec Ableton Live, avec BPM, Play/Stop et connexion au navigateur Pilami fonctionnels. Linux et macOS restent à développer. Voir [GitHub Releases](https://github.com/LostForgotten/pilami-link-bridge/releases) pour le téléchargement.
 
-## Installation (Windows 10 64 bits)
+## Installation depuis les sources (Windows 10 / 11 64 bits)
 
 Prérequis : **Node.js 24**, **Python** et **Visual Studio Build Tools** (compilateur C++ et SDK Windows). Le module Ableton Link natif sera compilé sur ta machine.
 
