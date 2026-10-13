@@ -28,6 +28,8 @@ $addon = Join-Path $nativeDest 'abletonlink\build\Release\abletonlink.node'
 if (-not (Test-Path $addon)) { throw "Missing compiled native addon: $addon" }
 
 Copy-Item (Join-Path $root 'README-PORTABLE.md') (Join-Path $folder 'LISEZ-MOI.md')
+Copy-Item (Join-Path $root 'LICENSE.md') (Join-Path $folder 'LICENSE.md')
+Copy-Item (Join-Path $root 'COPYING.GPLv2.md') (Join-Path $folder 'COPYING.GPLv2.md')
 $licenseDir = Join-Path $folder 'licenses'
 New-Item -ItemType Directory -Path $licenseDir -Force | Out-Null
 $nodeLicense = Join-Path (Split-Path $nodeexe -Parent) 'LICENSE'
@@ -36,6 +38,10 @@ if (Test-Path $nodeLicense) {
 } else {
   # LICENSE accompanies the official Node.js distribution used on the runner.
   throw "Node.js LICENSE missing near node.exe: $nodeLicense"
+}
+$linkLicense = Join-Path $root 'node_modules\@ktamas77\abletonlink\link\LICENSE.md'
+if (Test-Path $linkLicense) {
+  Copy-Item $linkLicense (Join-Path $licenseDir 'ABLETON-LINK-LICENSE.md')
 }
 $licenses = @{
   'abletonlink'='node_modules\@ktamas77\abletonlink'
