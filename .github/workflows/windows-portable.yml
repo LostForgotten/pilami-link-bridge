@@ -1,0 +1,52 @@
+name: Build Windows portable preview
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'server.cjs'
+      - 'sea-entry.cjs'
+      - 'sea-config.json'
+      - 'package.json'
+      - 'corriger-cpp.ps1'
+      - 'scripts/**'
+      - '.github/workflows/windows-portable.yml'
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify requirements
+        shell: pwsh
+        run: |
+          node -v
+          npm -v
+          python --version
+      - name: Install dependencies (defer native compilation)
+        shell: pwsh
+        run: npm install --ignore-scripts --no-audit
+      - name: Patch Ableton Link for Windows
+        shell: pwsh
+        run: ./corriger-cpp.ps1
+      - name: Compile native addon
+        shell: pwsh
+        run: npm rebuild @ktamas77/abletonlink --foreground-scripts
+      - name: Install SEA injector
+        shell: pwsh
+        run: npm install --no-save --ignore-scripts --no-audit postject@1.0.0-alpha.6
+      - name: Build portable archive
+        shell: pwsh
+        run: ./scripts/build-portable.ps1
+      - name: Smoke test native Link + WebSocket
+        shell: pwsh
+        run: node scripts/smoke-test.cjs
+      - name: Upload preview archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pilami-Link-Windows-x64-preview
+          path: dist/Pilami-Link-Windows-x64-preview.zip
+          if-no-files-found: error
+          retention-days: 30
