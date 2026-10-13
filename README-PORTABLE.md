@@ -17,7 +17,7 @@ Il n'envoie aucune commande à Ableton. La découverte des pairs utilise le prot
 
 ## Préversion
 
-Cette archive est assemblée et testée sur un runner Windows GitHub Actions ; **un premier test réel avec Ableton Live sur Windows 10 x64 s'est bien passé**, mais elle reste une bêta et la compatibilité Windows 11 n'est pas encore confirmée. Elle n'est pas signée numériquement : Windows SmartScreen peut afficher un avertissement. Ne désactive pas les protections Windows globalement pour la faire fonctionner.
+Cette archive est assemblée et testée sur un runner Windows GitHub Actions ; **des tests réels avec Ableton Live sur Windows 10 x64 et Windows 11 x64 se sont bien passés**, y compris la synchronisation BPM, Play/Stop et la connexion au navigateur Pilami. Elle reste une bêta. Elle n'est pas signée numériquement : Windows SmartScreen peut afficher un avertissement. Ne désactive pas les protections Windows globalement pour la faire fonctionner.
 
 Si une version antérieure du bridge tourne déjà, ferme-la avant d'exécuter celle-ci, sinon le port 8765 sera occupé.
 
