@@ -17,8 +17,12 @@ Il n'envoie aucune commande à Ableton. La découverte des pairs utilise le prot
 
 ## Préversion
 
-Cette archive est assemblée et testée sur un runner Windows GitHub Actions, mais **le comportement avec Ableton Live sur un véritable PC doit encore être testé**. Elle n'est pas signée numériquement : Windows SmartScreen peut afficher un avertissement. Ne désactive pas les protections Windows globalement pour la faire fonctionner.
+Cette archive est assemblée et testée sur un runner Windows GitHub Actions ; **un premier test réel avec Ableton Live sur Windows 10 x64 s'est bien passé**, mais elle reste une bêta et la compatibilité Windows 11 n'est pas encore confirmée. Elle n'est pas signée numériquement : Windows SmartScreen peut afficher un avertissement. Ne désactive pas les protections Windows globalement pour la faire fonctionner.
 
 Si une version antérieure du bridge tourne déjà, ferme-la avant d'exécuter celle-ci, sinon le port 8765 sera occupé.
 
 Les licences des composants tiers sont regroupées dans `licenses`.
+
+## Source et licences
+
+Le code original Pilami et le SDK Ableton Link sont distribués conformément à la **GPLv2 ou ultérieure**. Les notices de licence et le texte complet de la GPLv2 sont inclus avec l'exécutable ; les sources correspondantes sont fournies dans une seconde archive sur la page GitHub Releases du projet.
