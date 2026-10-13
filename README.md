@@ -4,7 +4,7 @@ Pont local entre **Ableton Link** et [Pilami Strudel Lab](https://pilami.fr/stru
 
 Le bridge lit le **BPM**, la position en temps et mesures, les participants Link et les états **Play/Stop**, puis les transmet à l'application web par WebSocket local. Il ne modifie pas le tempo ni le transport de Live.
 
-> **Prototype Windows** : version fonctionnelle testée sur Windows 10 x64 avec Node.js 24 et Ableton Live. Il n'existe pas encore de version exécutable portable prête à lancer. Windows 11, macOS et Linux restent à tester.
+> **Bêta Windows** : l'exécutable portable a été testé sur Windows 10 x64 avec Ableton Live. La compatibilité Windows 11 reste à confirmer. Linux et macOS restent à développer. Voir [GitHub Releases](https://github.com/LostForgotten/pilami-link-bridge/releases) pour le téléchargement.
 
 ## Installation (Windows 10 64 bits)
 
@@ -39,6 +39,10 @@ La synchronisation du navigateur via WebSocket n'est **pas** à précision audio
 
 ## Licence et contributions
 
-Le code du projet Pilami n'a pas encore de licence de redistribution explicite ; il faut en choisir une après vérification des dépendances avant d'annoncer une version libre et des contributions ouvertes. Le module `@ktamas77/abletonlink` et le SDK Ableton Link conservent leurs licences respectives. `node_modules`, binaires compilés et fichiers de configuration personnels sont exclus du dépôt.
+Le code original Pilami Link Bridge est distribué sous licence **GPL-2.0-or-later** (voir [LICENSE.md](LICENSE.md) et [COPYING.GPLv2.md](COPYING.GPLv2.md)). Le SDK Ableton Link inclus dans le module natif est également sous **GPLv2 ou ultérieure**, tandis que le wrapper `@ktamas77/abletonlink` est annoncé sous MIT. La bêta Windows contient les notices applicables ; une archive des sources correspondantes accompagne la Release. `node_modules`, binaires compilés et fichiers de configuration personnels sont exclus du dépôt.
 
 Consulte [SECURITY.md](SECURITY.md) et [CHANGELOG.md](CHANGELOG.md).
+
+## Bêta portable Windows
+
+Pour utiliser Pilami sans installer Node.js ni Visual Studio, récupère l'archive **Pilami-Link-Windows-x64** depuis les [Releases](https://github.com/LostForgotten/pilami-link-bridge/releases). Une archive **sources correspondantes** est proposée avec le binaire. Le programme Windows est non signé, distribué à titre de bêta, et doit être testé selon les instructions de [README-PORTABLE.md](README-PORTABLE.md).
