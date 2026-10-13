@@ -1,0 +1,58 @@
+name: Publish Pilami Link Bridge beta
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/release-beta.yml'
+permissions:
+  contents: write
+concurrency:
+  group: pilami-link-v0.1.0-beta.1
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install npm dependencies without compiling
+        shell: pwsh
+        run: npm install --ignore-scripts --no-audit
+      - name: Patch Windows native module
+        shell: pwsh
+        run: ./corriger-cpp.ps1
+      - name: Compile Ableton Link
+        shell: pwsh
+        run: npm rebuild @ktamas77/abletonlink --foreground-scripts
+      - name: Install Node.js SEA injector
+        shell: pwsh
+        run: npm install --no-save --ignore-scripts --no-audit postject@1.0.0-alpha.6
+      - name: Build Windows portable ZIP
+        shell: pwsh
+        run: ./scripts/build-portable.ps1
+      - name: Test executable and WebSocket
+        shell: pwsh
+        run: node scripts/smoke-test.cjs
+      - name: Build corresponding source archive
+        shell: pwsh
+        run: ./scripts/build-source.ps1
+      - name: Rename Windows ZIP
+        shell: pwsh
+        run: |
+          Move-Item dist/Pilami-Link-Windows-x64-preview.zip dist/Pilami-Link-Windows-x64-v0.1.0-beta.1.zip
+          Get-ChildItem dist -Filter *.zip | ForEach-Object { Get-FileHash $_.FullName -Algorithm SHA256 }
+      - name: Retain tested builds
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pilami-Link-beta1-release-candidates
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish prerelease on GitHub
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create v0.1.0-beta.1 dist/Pilami-Link-Windows-x64-v0.1.0-beta.1.zip dist/Pilami-Link-Sources-v0.1.0-beta.1.zip --repo "$env:GITHUB_REPOSITORY" --target "$env:GITHUB_SHA" --title "Pilami Link Bridge v0.1.0-beta.1" --notes-file RELEASE_NOTES_v0.1.0-beta.1.md --prerelease
