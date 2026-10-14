@@ -9,6 +9,10 @@
 
 L'application web continue de fonctionner sans le bridge. Le bridge n'a besoin ni de Node.js, ni de Python, ni de Visual Studio sur le PC de l'utilisateur. **Conserve tous les fichiers et sous-dossiers du ZIP ensemble**, y compris `node_modules` : le module natif est indispensable.
 
+## Performances et dépannage
+
+Si les visuels Hydra ralentissent dans Firefox, notamment en plein écran sur un écran HDMI, consulte la fiche [Firefox : utiliser la carte graphique dédiée pour Hydra](docs/depannage-gpu-firefox.md). Elle explique comment vérifier le GPU utilisé et choisir la carte dédiée dans Windows pour l'application web Pilami.
+
 ## Confidentialité et sécurité
 
 Le programme ouvre uniquement un serveur WebSocket sur `127.0.0.1:8765` (ordinateur local). Il limite les connexions aux origines autorisées par son code et ne communique pas avec un serveur Pilami distant, hormis l'utilisation normale de ton navigateur web sur pilami.fr.

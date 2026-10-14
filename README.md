@@ -37,6 +37,10 @@ La synchronisation du navigateur via WebSocket n'est **pas** à précision audio
 - **Le BPM suit mais pas Play/Stop** : vérifie **Start/Stop Sync dans Ableton Live**, distinct de Link.
 - **Pas de connexion au WebSocket** : assure-toi que le bridge tourne et que la page est bien ouverte depuis pilami.fr.
 
+## Performances et dépannage
+
+Si les visuels Hydra ralentissent dans Firefox, notamment en plein écran sur un écran HDMI, consulte la fiche [Firefox : utiliser la carte graphique dédiée pour Hydra](docs/depannage-gpu-firefox.md). Elle explique comment vérifier le GPU utilisé et choisir la carte dédiée dans Windows pour l'application web Pilami.
+
 ## Licence et contributions
 
 Le code original Pilami Link Bridge est distribué sous licence **GPL-2.0-or-later** (voir [LICENSE.md](LICENSE.md) et [COPYING.GPLv2.md](COPYING.GPLv2.md)). Le SDK Ableton Link inclus dans le module natif est également sous **GPLv2 ou ultérieure**, tandis que le wrapper `@ktamas77/abletonlink` est annoncé sous MIT. La bêta Windows contient les notices applicables ; une archive des sources correspondantes accompagne la Release. `node_modules`, binaires compilés et fichiers de configuration personnels sont exclus du dépôt.
