@@ -1,89 +1,54 @@
-# Pilami Strudel Lab
+# Pilami Link Bridge
 
-Un laboratoire de création musicale et visuelle dans le navigateur, intégré à WordPress : **Strudel pour le son, Hydra pour l’image**, avec un Designer visuel, des contrôleurs MIDI et un séquenceur de variations.
+Pont local entre **Ableton Link** et [Pilami Strudel Lab](https://pilami.fr/strudel/).
 
-Développé pour [pilami.fr/strudel](https://pilami.fr/strudel/), au fil d’essais musicaux et de sessions de VJing.
+Le code de l’application WordPress (Strudel, Hydra, Designer, contrôleurs MIDI, snapshots et séquenceur) est disponible dans **[LostForgotten/pilami-strudel-lab](https://github.com/LostForgotten/pilami-strudel-lab)**, avec sa documentation et ses instructions d’installation. Les versions du bridge restent publiées dans ce dépôt.
 
-**Version actuelle : 0.39.51 — projet en développement.**
+Le bridge lit le **BPM**, la position en temps et mesures, les participants Link et les états **Play/Stop**, puis les transmet à l'application web par WebSocket local. Il ne modifie pas le tempo ni le transport de Live.
 
-## Ce que l’on peut faire
+> **Bêta Windows** : l'exécutable portable a été testé sur Windows 10 x64 et Windows 11 x64 avec Ableton Live, avec BPM, Play/Stop et connexion au navigateur Pilami fonctionnels. Linux et macOS restent à développer. Voir [GitHub Releases](https://github.com/LostForgotten/pilami-link-bridge/releases) pour le téléchargement.
 
-- Écrire et jouer des patterns Strudel, charger des presets et conserver ses essais.
-- Créer des visuels Hydra, les rendre réactifs au son et explorer des presets.
-- Manipuler les visuels avec des sliders, potentiomètres et pads XY, ouvrir le panneau Performance basé sur PixiJS / PixiUI, et retrouver les valeurs initiales au clic droit.
-- Choisir la résolution de rendu, du 640 × 360 au Full HD, sans éditer le code et en conservant la taille choisie en plein écran.
-- Importer et conserver ses photos dans le navigateur pour créer des visuels et alimenter les presets image.
-- Construire et importer des chaînes Hydra dans le Designer visuel, dans les limites des fonctions prises en charge.
-- Associer un appareil MIDI aux paramètres, corriger les associations et lisser les mouvements.
-- Capturer jusqu’à dix snapshots, rappeler une variation ou réaliser un morphing entre réglages.
-- Séquencer ces variations sur une grille de 16 ou 32 pas, avec remplissage aléatoire et synchronisation Ableton Link facultative.
-- Détacher le visuel, le code et les contrôleurs dans des fenêtres, et configurer des raccourcis pour plusieurs écrans.
-- Exporter un Pack VJ hors ligne depuis l’interface Hydra.
-- Exporter le visuel courant en une page HTML autonome, avec ses réglages et sa résolution.
-- Mettre à jour le code d’un preset en conservant les snapshots compatibles.
-- Gérer les presets Hydra, leur apparence et les banques de snapshots dans WordPress, selon les droits de l’utilisateur.
+## Installation depuis les sources (Windows 10 / 11 64 bits)
 
-## Nouveautés de la version 0.39.51
+Prérequis : **Node.js 24**, **Python** et **Visual Studio Build Tools** (compilateur C++ et SDK Windows). Le module Ableton Link natif sera compilé sur ta machine.
 
-- **Une scène devient une page web** : export HTML autonome du preset lancé, avec les valeurs actuelles des contrôleurs, les images référencées et la résolution choisie. Lecture sans WordPress, pause, plein écran et sources incluses.
-- **Le son reste choisi par le visiteur** : les collisions du bol peuvent être activées par un clic. La page ne sollicite ni micro ni MIDI ; les entrées FFT restent à zéro.
-- **Mettre à jour sans refaire ses variations** : le nouveau code reprend les snapshots et réglages compatibles par nom de contrôleur. La sauvegarde WordPress vérifie le nom et le code relus après l’enregistrement.
-- **Nouvel exemple original** : [bol de verre et billes](docs/bol-de-verre.md), avec collisions, sons, lueurs de la couleur de chaque bille, éclairage des voisines, occlusion ambiante et cadrage X/Y. Version du preset : 1.13.
+1. Télécharge les sources depuis **Code → Download ZIP** et décompresse-les.
+2. Exécute `01-installer-windows.cmd` (sans privilèges administrateur).
+3. Ce script installe les dépendances, corrige la configuration C++20 et le problème byte-swap Windows du module `@ktamas77/abletonlink@1.2.3`, puis compile le module.
+4. Exécute `02-demarrer-windows.cmd` et laisse cette fenêtre ouverte.
+5. Dans **Ableton Live**, active **Link** ET **Start/Stop Sync** (« Synchro de démarrage arrêt ») si tu souhaites suivre les commandes de transport.
+6. Sur [pilami.fr/strudel/](https://pilami.fr/strudel/), clique sur **Connecter Link**.
 
-Voir [l’export web](docs/export-web.md), le [guide de résolution et de fluidité](docs/performance.md) et le [journal des versions](CHANGELOG.md).
+**Important :** Link peut synchroniser le BPM sans synchroniser Play/Stop ; l'option Start/Stop Sync est distincte dans Live.
 
-## Essayer
+## Fonctionnement
 
-Ouvre **[l’application sur pilami.fr](https://pilami.fr/strudel/)**. Choisis un preset puis lance **Lecture / Update** ou **Ctrl + Entrée**. Choisir un preset charge son code sans lancer automatiquement sa lecture.
+- WebSocket : `ws://127.0.0.1:8765` (interface locale seulement).
+- Origines navigateur autorisées : `https://pilami.fr`, `https://www.pilami.fr` et quelques origines locales de développement.
+- Informations envoyées environ 10 fois par seconde : `bpm`, `beat`, `phase`, `phase16`, `phase32`, `peers`, `playing`, `startStopSync`.
+- Pas de modification du tempo ni de Play/Stop depuis le navigateur.
+- Le site fonctionne normalement sans bridge.
 
-En haut du laboratoire, active **Audio**, **MIDI** ou **Link** selon tes besoins. L’audio sert d’entrée aux visuels réactifs et peut être activé avant le premier visuel. **P** lance ou arrête le visuel ; **Ctrl + I** ouvre l’import d’un preset Hydra. Les boutons indiquent leurs raccourcis au survol.
+La synchronisation du navigateur via WebSocket n'est **pas** à précision audio-échantillon.
 
-Le site fonctionne sans passerelle Ableton. L’audio, le MIDI et certaines fonctions d’affichage nécessitent les autorisations du navigateur.
+## Dépannage
 
-## Installer dans WordPress
+- **`Cannot find module 'ws'`** : l'installation npm n'a pas abouti ; relance l'installateur et consulte l'erreur affichée.
+- **Erreur `string_view` ou C++14** : l'installateur applique automatiquement l'option C++20.
+- **Erreur `__DARWIN_OSSwapInt64`** : l'installateur ajoute un alias de compatibilité Windows.
+- **Le BPM suit mais pas Play/Stop** : vérifie **Start/Stop Sync dans Ableton Live**, distinct de Link.
+- **Pas de connexion au WebSocket** : assure-toi que le bridge tourne et que la page est bien ouverte depuis pilami.fr.
 
-1. Récupère le ZIP installable `pilami-strudel-lab-v0.39.51.zip` lorsqu’il est fourni avec une version.
-2. Dans WordPress : **Extensions → Ajouter une extension → Téléverser une extension**.
-3. Installe et active **Pilami Strudel Lab** ; pour une mise à jour, accepte le remplacement de l’extension existante.
-4. Ajoute un bloc **Code court** à une page avec `[pilami_strudel]`.
-5. Publie la page et ouvre-la dans un navigateur récent avec Web Audio et WebGL.
+## Performances et dépannage
 
-Pour fabriquer le ZIP à partir des sources, lance `python3 scripts/build_plugin.py` à la racine du dépôt. Le résultat se trouve dans `dist/`.
+Si les visuels Hydra ralentissent dans Firefox, notamment en plein écran sur un écran HDMI, consulte la fiche [Firefox : utiliser la carte graphique dédiée pour Hydra](docs/depannage-gpu-firefox.md). Elle explique comment vérifier le GPU utilisé et choisir la carte dédiée dans Windows pour l'application web Pilami.
 
-Le dépôt contient le code de l’extension. Les presets, images et réglages enregistrés dans la base de données de pilami.fr ne constituent pas une sauvegarde incluse dans ce dépôt. Certaines ressources personnalisées pointent encore vers la médiathèque de pilami.fr ; consulte le [guide d’installation](docs/installation.md).
+## Licence et contributions
 
-## Exemples de presets
+Le code original Pilami Link Bridge est distribué sous licence **GPL-2.0-or-later** (voir [LICENSE.md](LICENSE.md) et [COPYING.GPLv2.md](COPYING.GPLv2.md)). Le SDK Ableton Link inclus dans le module natif est également sous **GPLv2 ou ultérieure**, tandis que le wrapper `@ktamas77/abletonlink` est annoncé sous MIT. La bêta Windows contient les notices applicables ; une archive des sources correspondantes accompagne la Release. `node_modules`, binaires compilés et fichiers de configuration personnels sont exclus du dépôt.
 
-Le [bol de verre et ses billes](examples/Bol-de-verre-billes-audio.hydra.txt) ajoute une simulation originale WebGL 2, avec mélangeur, matières, collisions sonores et lueurs locales. Le [guide du bol](docs/bol-de-verre.md) présente ses réglages ; ses sources séparées et leur script de compilation sont inclus. Une [scène publique](https://pilami.fr/visuels/billes/) illustre l’export HTML autonome.
+Consulte [SECURITY.md](SECURITY.md) et [CHANGELOG.md](CHANGELOG.md).
 
-### Nuage Pixi
+## Bêta portable Windows
 
-Le [nuage de particules réactives](examples/Nuage-Particules-Pixi.hydra.txt) combine Pixi et Hydra : mouvement, couleurs, réaction au son et opacité aléatoire évoluant indépendamment pour chaque particule. Télécharge le fichier texte puis importe-le dans Hydra avec **Ctrl + I**. Il utilise la bibliothèque Pixi embarquée, sans chargement depuis un CDN.
-
-## Ableton Link : le projet compagnon
-
-**[Pilami Link Bridge](https://github.com/LostForgotten/pilami-link-bridge)** relie l’horloge Ableton Link à l’interface du navigateur. Il possède son propre dépôt et sa version portable Windows.
-
-Il transmet tempo, phase et état de transport au navigateur. Les commandes du séquenceur visuel ne pilotent pas le transport de Live. La synchronisation visuelle dépend du navigateur ; elle n’est pas précise à l’échantillon audio près.
-
-Voir [la connexion Ableton Link](docs/ableton-link.md). La copie présente dans `tools/ableton-link-bridge/` est conservée avec cette version de l’extension ; le dépôt compagnon est le point d’entrée pour installer le bridge et suivre ses versions.
-
-## Documentation
-
-- [Installation et mises à jour](docs/installation.md)
-- [Premiers pas et raccourcis](docs/premiers-pas.md)
-- [Connexion Ableton Link](docs/ableton-link.md)
-- [Résolution, fluidité et plein écran](docs/performance.md)
-- [Exporter une page web autonome](docs/export-web.md)
-- [Bol de verre, collisions et lueurs](docs/bol-de-verre.md)
-- [Organisation du code](docs/developpement.md)
-- [Contribuer ou signaler un problème](CONTRIBUTING.md)
-- [Derniers changements](CHANGELOG.md)
-- [Historique détaillé livré avec l’extension](README.txt)
-- [Guide rapide PDF](https://pilami.fr/wp-content/uploads/2026/10/Pilami-Strudel-Hydra-guide-rapide.pdf) — rédigé pour la version 0.39.3 ; les changements récents sont détaillés ici.
-
-## Crédits et licence
-
-L’extension annonce la licence **AGPL-3.0-or-later**. Le texte figure dans [LICENSE](LICENSE). Elle s’appuie notamment sur Strudel, Hydra, PixiJS / PixiUI, Acorn, hydra-midi et des extensions Hydra ; leurs auteurs, sources et licences sont conservés dans le dépôt et récapitulés dans [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-Le Designer Pilami a été développé au cours de l’exploration d’ONDA ; les fonctions de conversion de code ont leurs limites décrites dans l’historique. Les composants tiers et les exemples portant une notice particulière conservent leurs propres conditions.
+Pour utiliser Pilami sans installer Node.js ni Visual Studio, récupère l'archive **Pilami-Link-Windows-x64** depuis les [Releases](https://github.com/LostForgotten/pilami-link-bridge/releases). Une archive **sources correspondantes** est proposée avec le binaire. Le programme Windows est non signé, distribué à titre de bêta, et doit être testé selon les instructions de [README-PORTABLE.md](README-PORTABLE.md).
